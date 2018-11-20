@@ -98,9 +98,9 @@
 				var items = [];
 				var other = [];
 				$('#table1 > tbody > tr').each(function(){
-					var gyo = $(this).find('.seq').val();
-					if(gyo != ''){
-						items[gyo] = $(this);
+					var seq = $(this).find('.seq').text();
+					if(seq != ''){
+						items[seq] = $(this);
 					}else{
 						hideProductRow($(this));
 						other.push($(this));
@@ -126,7 +126,28 @@
 <body>
 <div class="contents">
 	<table class"list" id="table1">
-
+	<thead>
+	<tr>
+	<th>seq</th>
+	<th>column</th>
+	<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td class="rowNum"><span class"seq">1<span></td>
+	<td></td>
+	<td>
+		<ul>
+		<li>
+          <input type="button" class="addRow" title="行の追加" /><br />
+          <input type="button" class="delRow" title="行の削除" />
+        </li>
+        <li class="handle"></li>
+		</ul>
+	</td>
+	</tr>
+	</tbody>
 	</table>
 </div>
 </body>
