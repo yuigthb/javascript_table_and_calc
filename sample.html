@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			// 行の並び替え
+			$('.list tbody').sortable({
+				handle: '.handle',
+				axis: 'y',
+				cursor: 'move',
+				update: function(){
+				// 並替え終了時のイベント
+				oddRow();
+			}
+			});
+			$('.list tbody').disableSelection();
+
+			//行追加ボタンクリックイベント
+			$('.addRow').click(function(e){
+				var trVisibleCount = $('.list tbody > tr').length - $('.list tbody > tr.h').length;
+				if(trVisibleCount >= 10) {
+					alert('10行を超える明細行の追加は行えません。');
+					return false;
+				}
+		
+				if($('.list tbody > tr.h').length < 1){
+					return false;
+				}
+		
+				var tr = $(this).closest('tr');
+				var insertTr = $('.list tbody > tr.h').first();
+		
+				tr.before(insertTr);
+				viewProductRow(insertTr);
+		
+				oddRow();
+			});
+
+			//行削除ボタンクリックイベント
+			$('.delRow').click(function(e){
+				//tr要素を取得
+				var tr = $(this).closest('tr');
+		
+				var trVisibleCount = $('.list tbody > tr').length - $('.list tbody > tr.h').length;
+				if(trVisibleCount > 1) {
+					hideProductRow(tr);
+					$('.list tbody > tr').last().after(tr);	//最終行の次に配置
+				}
+		
+				var children = tr.children();
+				for(var i = 0; i < children.length; i++){
+					delRowData(children[i]);
+				}
+				oddRow();
+			});
+
+			//行の非表示
+			function hideProductRow(tr){
+				tr.addClass('h');
+				tr.children('td').addClass('hide');
+			}
+			//行の表示
+			function viewProductRow(tr){
+				tr.removeClass('h');
+				tr.children('td').removeClass('hide');
+			}
+
+			//行弁豪の振り直し
+			function oddRow(){
+				var cnt = 0;
+				$('.rowNum').each(function(){
+					if(! $(this).closest('tr').hasClass('h')){
+						cnt += 1;
+						$(this).eq(0).children('span').text(cnt);
+						$(this).eq(0).children('input[type=hidden]').val(cnt);
+					}
+				});
+			}
+
+			//内容を消す
+			function delRowData(obj){
+				var ch = obj.childNodes;
+				if(ch.length > 0){
+					for(var i = 0; i < ch.length; i++){
+						delRowData(ch[i]);
+					}
+				}else{
+					if(obj.value !== undefined){
+						obj.value = '';
+					}
+				}
+			}
+	
+			//行番号順に並び替える
+			function goodsSort(){
+				var items = [];
+				var other = [];
+				$('#table1 > tbody > tr').each(function(){
+					var gyo = $(this).find('.seq').val();
+					if(gyo != ''){
+						items[gyo] = $(this);
+					}else{
+						hideProductRow($(this));
+						other.push($(this));
+					}
+				});
+				//行番号順に並んだ行を追加する
+				items.forEach(function(item){
+					$('#meisaiTable').append(item);
+				});
+				//行番号のない隠れた行を追加する
+				other.forEach(function(item){
+					$('#meisaiTable').append(item);
+				});
+			}
+
+		});
+	</script>
+</head>
+<body>
+<div class="contents">
+	<table class"list" id="table1">
+		
+	</table>
+</div>
+</body>
+
+</html>
