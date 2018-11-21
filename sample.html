@@ -11,9 +11,9 @@
 				axis: 'y',
 				cursor: 'move',
 				update: function(){
-				// 並替え終了時のイベント
-				oddRow();
-			}
+					// 並替え終了時のイベント
+					oddRow();
+				}
 			});
 			$('.list tbody').disableSelection();
 
@@ -119,6 +119,11 @@
 
 
 			//小数点有りの計算
+			
+
+			//読み込み時に実行
+			oddRow();
+			goodsSort();
 
 		});
 	</script>
